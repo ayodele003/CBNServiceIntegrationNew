@@ -1,0 +1,185 @@
+select
+(select sum(DORMACCOUNTS) from
+(select count(a.foracid) "DORMACCOUNTS" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION
+			select count(a.foracid) from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)) AS DormantAccounts,
+(select sum(DORMCORPUSD) from
+(select count(a.foracid) "DORMCORPUSD" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMCORPUSD" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)) AS DORMANTCORPORATUSD,
+(select sum(DORMCORP) from
+(select count(a.foracid) "DORMCORP"  from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMCORP" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DormantCorporate,
+(select sum(DORMIND) from
+(select count(a.foracid) "DORMIND" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select sum(count(a.foracid)) "DORMIND" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)) AS DormantIndividual,
+(select sum(DORMCORPNGN) from
+(select count(a.foracid) "DORMCORPNGN"  from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'NGN'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMCORPNGN"  from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'NGN'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTCORPORATENGN,
+(select sum(DORMCORPEUR) from
+(select count(a.foracid) "DORMCORPEUR"  from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'EUR'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select sum(count(a.foracid)) "DORMCORPEUR" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'EUR'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTCORPORATEUR,
+(select sum(DORMCORPGBP) from
+(select count(a.foracid) "DORMCORPGBP" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'GBP'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMCORPGBP" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'GBP'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTCORPORATGBP,
+(select sum(count(a.foracid)) "DORMCORPUSD" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and schm_type IN ('SBA', 'CAA')
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION
+			select sum(count(a.foracid)) "DORMCORPUSD" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and schm_type IN ('ODA')
+			and substr(a.cif_id,1,1) = 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)AS DORMANTCORPORATUSD,
+(select sum(DORMINDNGN) from
+(select count(a.foracid) "DORMINDNGN" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'NGN'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMINDNGN"  from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'NGN'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTINDIVIDUALNGN,
+(select sum(DORMINDUSD) from
+(select count(a.foracid) "DORMINDUSD"  from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMINDUSD" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'USD'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTINDIVIDUALUSD,
+(select sum(DORMINDEUR) from
+(select count(a.foracid) "DORMINDEUR" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'EUR'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select sum(count(a.foracid)) "DORMINDEUR" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'EUR'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTINDIVIDUALEUR,
+(select sum(DORMINDGBP) from
+(select count(a.foracid) "DORMINDGBP" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'GBP'
+			and a.acct_cls_flg = 'N'
+			GROUP BY a.cif_id,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMINDGBP" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.ACCT_STATUS = 'D'
+			and substr(a.cif_id,1,1) != 'C'
+			and a.acct_crncy_code = 'GBP'
+			and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE))AS DORMANTINDIVIDUALEGBP, 		
+(select sum(count(a.foracid)) "DORMTIER1" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.acct_status = 'D'
+			and a.schm_code in ('60008','60009')
+			and a.acct_cls_flg = 'N'
+			GROUP BY schm_code,SCHM_TYPE) AS DormantTier1,
+(select sum(count(a.foracid)) "DORMTIER2" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.acct_status = 'D'
+			and a.schm_code in ('60004','60013','60007')
+			and a.acct_cls_flg = 'N'
+			GROUP BY schm_code,SCHM_TYPE) AS DormantTier2,
+(select sum(DORMTIER3) from
+(select count(a.foracid) "DORMTIER3" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+			and b.acct_status = 'D'
+			and a.schm_code not in ('60004','60013','60008','60009','60007')
+			and a.acct_cls_flg = 'N'
+			GROUP BY schm_code,SCHM_TYPE
+			UNION ALL
+			select count(a.foracid) "DORMTIER3" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+			and b.acct_status = 'D'
+			and a.schm_code not in ('60004','60013','60008','60009','60007')
+			and a.acct_cls_flg = 'N'
+GROUP BY schm_code,SCHM_TYPE))AS DormantTier3
+            from dual

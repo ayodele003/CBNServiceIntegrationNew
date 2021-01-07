@@ -1,0 +1,22 @@
+select acct_name as Name,decode(schm_type,'ODA','OverdraftAccount','SBA','SavingsAccount','CAA','CurrentAccount') as Type,
+    decode(substr(cif_id,1,1),'C','Corporate','Individual') as Category,
+    decode(schm_code,'60008','TIER1','60009','TIER1','60007','TIER2','60004','TIER2','60013','TIER2','TIER3') Tier,clr_bal_amt  as CLR_BAL,
+    (Clr_Bal_amt + Sanct_Lim + future_bal_amt - lien_amt - System_Reserved_Amt - (select acct_min_balance from tbaadm.csp
+                                                                                  where schm_code=g.schm_code
+                                                                                  and CRNCY_CODE=acct_crncy_code)
+    ) as AVL_BAL,foracid as AccountNo,
+    (select distinct ADDRESS_LINE1||' '||ADDRESS_LINE2||' '||ADDRESS_LINE3 from Crmuser.Address where orgkey=cif_id and rownum=1) as Address,
+    email as Email,phoneno as Telephone,acct_crncy_code as Currency, To_Char(acct_opn_date,'DD-MM-YYYY') as AOD,custom.getbvn(foracid) as BVN,
+    (select decode(acct_status,'A','Active','I','Inactive','Dormant') from tbaadm.smt where acid=g.acid 
+    union 
+    select decode(acct_status,'A','Active','I','Inactive','Dormant') from tbaadm.cam where acid=g.acid) as Account_Status,
+    decode(frez_code,'D','PND','C','PNC','Freeze') as Restriction_Status,(select taxid from crmuser.corporate where corp_key=cif_id) as Tax_Id_no,''as NIN,
+    (select registration_number from crmuser.corporate where corp_key=cif_id) as RCNumber
+    from tbaadm.gam g,(select phoneno,orgkey,(select distinct email from crmuser.phoneemail where orgkey=e.orgkey and phoneoremail='EMAIL' and preferredflag='Y' and rownum=1)  email
+                        from crmuser.phoneemail e where phoneoremail='PHONE' and preferredflag='Y'
+                        union
+                        select (select phoneno from crmuser.phoneemail where orgkey=e.orgkey and phoneoremail='PHONE' and preferredflag='Y' and rownum=1) phoneno,orgkey,email
+                        from crmuser.phoneemail e where phoneoremail='EMAIL' and preferredflag='Y') a
+    where g.cif_id=a.orgkey
+    and schm_type in ('ODA','SBA','CAA')
+    and foracid='{0}'

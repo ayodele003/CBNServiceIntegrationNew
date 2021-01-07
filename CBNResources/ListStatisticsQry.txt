@@ -1,0 +1,62 @@
+select
+(select sum(ACTIVETIER3) from
+(select count(a.foracid) "ACTIVETIER3" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and a.acct_cls_flg = 'N'
+		GROUP BY a.cif_id,SCHM_TYPE
+		UNION all
+		select count(a.foracid) from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)) as ActiveAccount, 
+(select sum(ACTIVETCORP) from
+(select count(a.foracid) "ACTIVETCORP" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and substr(a.cif_id,1,1) = 'C'
+		and a.acct_cls_flg = 'N'
+		GROUP BY a.cif_id,SCHM_TYPE
+		UNION ALL
+		select count(a.foracid) "ACTIVETCORP" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and a.acct_cls_flg = 'N'
+		and substr(a.cif_id,1,1) = 'C'
+GROUP BY a.cif_id,SCHM_TYPE)) as ActiveCorporate,
+(select sum(ACTIVETIND) from
+(select count(a.foracid) "ACTIVETIND" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and substr(a.cif_id,1,1) != 'C'
+		and a.acct_cls_flg = 'N'
+		GROUP BY a.cif_id,SCHM_TYPE
+		UNION ALL
+		select count(a.foracid) "ACTIVETIND" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+		and b.ACCT_STATUS = 'A'
+		and substr(a.cif_id,1,1) != 'C'
+		and a.acct_cls_flg = 'N'
+GROUP BY a.cif_id,SCHM_TYPE)) as ActiveIndividual,
+(select  
+		sum(count(a.foracid)) "ACTIVETIER1" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+		and b.acct_status = 'A'
+		and a.schm_code in ('60008','60009')
+		and a.acct_cls_flg = 'N'
+		GROUP BY schm_code,SCHM_TYPE) as ActiveTier1, 
+	(select  
+		sum(count(a.foracid)) "ACTIVETIER2" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+		and b.acct_status = 'A'
+		and a.schm_code in ('60004','60013','60007')
+		and a.acct_cls_flg = 'N'
+GROUP BY schm_code,SCHM_TYPE) as ActiveTier2,
+(select sum(ACTIVETIER3) from	
+(select
+	sum(count(a.foracid)) "ACTIVETIER3" from tbaadm.gam a , tbaadm.smt b where  a.acid = b.acid
+	and b.acct_status = 'A'
+	and a.schm_code not in ('60004','60013','60008','60009','60007')
+	and a.acct_cls_flg = 'N'
+	GROUP BY schm_code,SCHM_TYPE
+	union
+	select 
+	sum(count(a.foracid)) "ACTIVETIER3" from tbaadm.gam a , tbaadm.cam b where  a.acid = b.acid
+	and b.acct_status = 'A'
+	and a.schm_code not in ('60004','60013','60008','60009','60007')
+	and a.acct_cls_flg = 'N'
+	GROUP BY schm_code,SCHM_TYPE)) as ActiveTier3
+from dual

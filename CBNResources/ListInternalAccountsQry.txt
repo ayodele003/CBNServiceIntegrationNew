@@ -1,0 +1,2 @@
+select decode(length(foracid),10,foracid) as Nuban,decode(length(foracid),14,foracid) as NonNuban from tbaadm.gam where ACCT_CLS_FLG = 'N'
+     and ACCT_OWNERSHIP = 'O' and GL_SUB_HEAD_CODE ='{0}'

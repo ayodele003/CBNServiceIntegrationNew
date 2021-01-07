@@ -1,0 +1,20 @@
+select (select COUNT(FORACID) from tbaadm.gam where ACCT_CLS_FLG = 'Y'
+        and ACCT_OWNERSHIP = 'C' and del_flg = 'N' and ENTITY_CRE_FLG = 'Y' and acct_cls_date is not null)
+		as ClosedAccounts,
+	   (select count(FORACID) from tbaadm.gam B where B.ACCT_CLS_FLG = 'Y'
+	    and ACCT_OWNERSHIP = 'C' and ENTITY_CRE_FLG = 'Y' and substr(cif_id,1,1) = 'C'
+        and del_flg = 'N' and acct_cls_date is not null)
+        as ClosedCorporate ,
+       (select count(FORACID) from tbaadm.gam B where B.ACCT_CLS_FLG = 'Y'
+	    and ACCT_OWNERSHIP = 'C' and ENTITY_CRE_FLG = 'Y' and substr(cif_id,1,1) = 'R'
+        and acct_cls_date is not null and del_flg = 'N')
+        as ClosedIndividual,
+       (select COUNT(FORACID) from tbaadm.gam where ACCT_CLS_FLG = 'Y' and ACCT_OWNERSHIP = 'C'
+        and del_flg = 'N' and schm_code IN ('60008','60009') and ENTITY_CRE_FLG = 'Y' and acct_cls_date is not null)
+        as ClosedTier1,
+       (select COUNT(FORACID) from tbaadm.gam where ACCT_CLS_FLG = 'Y' and ACCT_OWNERSHIP = 'C'
+        and del_flg = 'N'and schm_code IN ('60007', '60004') and ENTITY_CRE_FLG = 'Y' and acct_cls_date is not null)
+        as ClosedTier2,
+       (select COUNT(FORACID) from tbaadm.gam where ACCT_CLS_FLG = 'Y' and ACCT_OWNERSHIP = 'C'
+       and del_flg = 'N' and schm_code NOT IN ('60007', '60004','60008','60009') and acct_cls_date is not null and ENTITY_CRE_FLG = 'Y')
+       as ClosedTier3 FROM DUAL

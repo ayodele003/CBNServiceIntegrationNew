@@ -1,0 +1,45 @@
+select
+      (SELECT count(A.acid) FROM TBAADM.SMT A, TBAADM.GAM B WHERE A.ACID = B.ACID
+	     AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE IN ('CAA','SBA') AND B.ENTITY_CRE_FLG = 'Y'
+		 AND B.ACCT_CLS_FLG = 'N' and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+           + (SELECT count(A.acid) FROM TBAADM.CAM A, TBAADM.GAM B WHERE A.ACID = B.ACID
+			  AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE = 'ODA' AND B.ENTITY_CRE_FLG = 'Y'
+              AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantAccounts,
+      (SELECT sum(b.CLR_BAL_AMT) FROM TBAADM.SMT A, TBAADM.GAM B WHERE A.ACID = B.ACID
+        AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE IN ('CAA','SBA') AND B.ENTITY_CRE_FLG = 'Y'
+        AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+		   + (SELECT sum(b.CLR_BAL_AMT) FROM TBAADM.CAM A, TBAADM.GAM B WHERE A.ACID = B.ACID
+              AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE = 'ODA' AND B.ENTITY_CRE_FLG = 'Y'
+			  AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantAccountsAmt,
+      (SELECT count(A.acid) FROM TBAADM.CAM A, TBAADM.GAM B, CRMUSER.CORPORATE C WHERE A.ACID = B.ACID
+			AND B.CIF_ID = C.CORP_KEY AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE = 'ODA' AND B.ENTITY_CRE_FLG = 'Y'
+			AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantCorporate,
+      (SELECT sum(b.CLR_BAL_AMT) FROM TBAADM.CAM A, TBAADM.GAM B, CRMUSER.CORPORATE C
+			WHERE A.ACID = B.ACID AND B.CIF_ID = C.CORP_KEY AND A.ACCT_STATUS IN ('D','I')
+			AND B.SCHM_TYPE = 'ODA' AND B.ENTITY_CRE_FLG = 'Y' AND B.ACCT_CLS_FLG = 'N'
+			and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantCorporateAmt,
+      (SELECT count(A.acid) FROM TBAADM.SMT A, TBAADM.GAM B, CRMUSER.ACCOUNTS C WHERE A.ACID = B.ACID
+			AND B.CIF_ID = C.ORGKEY AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE IN ('CAA','SBA')
+			AND B.ENTITY_CRE_FLG = 'Y' AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantIndividual,
+        (SELECT sum(b.CLR_BAL_AMT) FROM TBAADM.SMT A, TBAADM.GAM B, CRMUSER.ACCOUNTS C WHERE A.ACID = B.ACID
+            AND B.CIF_ID = C.ORGKEY AND A.ACCT_STATUS IN ('D','I') AND B.SCHM_TYPE IN ('CAA','SBA') AND B.ENTITY_CRE_FLG = 'Y'
+            AND B.ACCT_CLS_FLG = 'N'  and acct_cls_date is null AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+	   AS DormantIndividualAmt,
+        (SELECT count(A.acid) FROM TBAADM.SMT A, TBAADM.GAM B WHERE A.ACID = B.ACID AND A.ACCT_STATUS IN ('D','I')
+            AND B.SCHM_TYPE IN ('CAA','SBA') AND B.ENTITY_CRE_FLG = 'Y' AND B.ACCT_CLS_FLG = 'N'
+             and acct_cls_date is null AND B.schm_code IN ('60008','60009') AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+		AS DormantTier1,
+        (SELECT count(A.acid) FROM TBAADM.SMT A, TBAADM.GAM B WHERE A.ACID = B.ACID AND A.ACCT_STATUS IN ('D','I')
+            AND B.SCHM_TYPE IN ('CAA','SBA') AND B.ENTITY_CRE_FLG = 'Y' AND B.ACCT_CLS_FLG = 'N'
+             and acct_cls_date is null AND B.schm_code IN ('60007', '60004') AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+		AS DormantTier2,
+        (SELECT count(A.acid) FROM TBAADM.CAM A, TBAADM.GAM B WHERE A.ACID = B.ACID AND A.ACCT_STATUS IN ('D','I')
+            AND B.SCHM_TYPE = 'ODA' AND B.ENTITY_CRE_FLG = 'Y' AND B.ACCT_CLS_FLG = 'N'
+             and acct_cls_date is null AND B.schm_code NOT IN ('60007', '60004','60008','60009') AND B.DEL_FLG = 'N' AND B.BANK_ID = '01')
+		AS DormantTier3
+                from dual

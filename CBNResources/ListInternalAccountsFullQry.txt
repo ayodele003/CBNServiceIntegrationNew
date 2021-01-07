@@ -1,0 +1,6 @@
+select decode(length(foracid),10,foracid) as Nuban,decode(length(foracid),14,foracid) as NonNuban,
+decode(acct_cls_flg,'Y','Closed','Active') as Status,acct_crncy_code as Currency,
+(Select Tran_Date_Bal From Tbaadm.Eab Where Acid=a.Acid And Eod_Date <=(select dc_cls_date from tbaadm.gct) And End_Eod_Date >=(select dc_cls_date from tbaadm.gct)) Tran_Bal
+from tbaadm.gam a 
+where ACCT_CLS_FLG = 'N'
+and ACCT_OWNERSHIP = 'O' and GL_SUB_HEAD_CODE ='{0}'

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBNIntegrationData_NEW", "CBNIntegrationData_NEW\CBNIntegrationData_NEW.csproj", "{05308EE5-8D04-49F9-92AB-D188A21E33D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBNIntegrationData_NEW.Tests", "CBNIntegrationData_NEW.Tests\CBNIntegrationData_NEW.Tests.csproj", "{027E3476-51B8-4F0C-BB4F-B2BA07C38F95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05308EE5-8D04-49F9-92AB-D188A21E33D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05308EE5-8D04-49F9-92AB-D188A21E33D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05308EE5-8D04-49F9-92AB-D188A21E33D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05308EE5-8D04-49F9-92AB-D188A21E33D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{027E3476-51B8-4F0C-BB4F-B2BA07C38F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{027E3476-51B8-4F0C-BB4F-B2BA07C38F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{027E3476-51B8-4F0C-BB4F-B2BA07C38F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{027E3476-51B8-4F0C-BB4F-B2BA07C38F95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {209EBE4F-D541-4B1D-A6D5-9F4CA0B9B972}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,2 @@
+select ROUND((select count(taxid) from CRMUSER.CORPORATE a, tbaadm.cam b, tbaadm.gam c where taxid is not null  and taxid != ' '  and b.acct_status = 'A'  and a.corp_key = c.cif_id  and b.acid = c.acid )
+    /(select count(taxid) from CRMUSER.CORPORATE) * 100 , 2) as Percentage from dual

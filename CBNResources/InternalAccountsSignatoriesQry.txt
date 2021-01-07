@@ -1,0 +1,1 @@
+SELECT DISTINCT a.acct_name,a.sol_id,b.acct_status,c.sol_desc,a.FREZ_CODE,a.foracid FROM tbaadm.gam a, (select acid,acct_status from tbaadm.cam union select acid,acct_status from tbaadm.smt) b, tbaadm.sol c WHERE a.acid=b.acid(+) and  c.sol_id = a.sol_id   and a.foracid = '{0}' and b.acct_status = '{1}' and a.del_flg='{2}' and acct_cls_flg='N' and a.acct_crncy_code ='NGN'

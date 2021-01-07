@@ -1,0 +1,2 @@
+select foracid Nuban, taxid TIN,REGISTRATION_NUMBER RCNumber  from tbaadm.cam a, tbaadm.gam b, CRMUSER.CORPORATE  c
+    where b.del_flg = 'N' and a.acid=b.acid and c.corp_key=b.cif_id and A.ACCT_STATUS = 'A'

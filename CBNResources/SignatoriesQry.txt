@@ -1,0 +1,1 @@
+select trim(custom.get_signatory(orgkey)) as Name,replace(custom.getbvn(foracid),'null',null) as BVN,TO_CHAR(cust_dob,'DD-MM-YYYY')as Date_of_birth from tbaadm.gam g,crmuser.accounts a where g.cif_id=a.orgkey and foracid='{0}'

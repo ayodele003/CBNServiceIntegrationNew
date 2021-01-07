@@ -1,0 +1,1 @@
+select FORACID Nuban,AVL_BAL,ACCT_CRNCY_CODE Currency from CRMUSER.CORPORATE A, TBAADM.GAM B WHERE A.corp_key = b.cif_id and del_flg = 'N' and  REGISTRATION_NUMBER='{0}'

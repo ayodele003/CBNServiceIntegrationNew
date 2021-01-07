@@ -1,0 +1,6 @@
+select To_Char(tran_date,'DD-MM-YYYY') as TRA_DATE,To_Char(value_date,'DD-MM-YYYY') as VAL_DATE,acct_crncy_code 
+  as CURRENCY,tran_particular as Narration,tran_amt as TRA_AMT,part_tran_type as TRA_TYPE,decode(part_tran_type,'D',tran_amt) as DR_AMT,decode(part_tran_type,'C',tran_amt) as CR_AMT,
+    nvl((select tran_date_bal from tbaadm.eab where eod_date = '{1}'  and acid=g.acid and end_eod_date >= '{1}' ),0)+
+  sum(decode(part_tran_type,'D',-1*tran_amt,tran_amt)) over (order by tran_date, tran_id,part_tran_srl_num ) as TRA_BAL
+  from tbaadm.htd h,tbaadm.gam g where h.acid=g.acid and tran_date between '{1}'  and '{2}' 
+  and foracid='{0}' and pstd_flg='Y' and h.del_flg='N'
